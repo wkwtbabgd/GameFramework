@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System;
@@ -36,6 +36,17 @@ namespace GameFramework.Fsm
             protected set
             {
                 m_Name = value ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// 获取有限状态机完整名称。
+        /// </summary>
+        public string FullName
+        {
+            get
+            {
+                return new TypeNamePair(OwnerType, m_Name).ToString();
             }
         }
 

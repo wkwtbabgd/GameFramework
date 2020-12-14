@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace GameFramework.Resource
         {
             private readonly string m_Name;
             private readonly Dictionary<ResourceName, ResourceInfo> m_ResourceInfos;
-            private readonly List<ResourceName> m_ResourceNames;
+            private readonly HashSet<ResourceName> m_ResourceNames;
             private long m_TotalLength;
             private long m_TotalZipLength;
 
@@ -41,7 +41,7 @@ namespace GameFramework.Resource
 
                 m_Name = name;
                 m_ResourceInfos = resourceInfos;
-                m_ResourceNames = new List<ResourceName>();
+                m_ResourceNames = new HashSet<ResourceName>();
             }
 
             /// <summary>
@@ -87,7 +87,8 @@ namespace GameFramework.Resource
                     int readyCount = 0;
                     foreach (ResourceName resourceName in m_ResourceNames)
                     {
-                        if (m_ResourceInfos.ContainsKey(resourceName))
+                        ResourceInfo resourceInfo = null;
+                        if (m_ResourceInfos.TryGetValue(resourceName, out resourceInfo) && resourceInfo.Ready)
                         {
                             readyCount++;
                         }
@@ -129,8 +130,8 @@ namespace GameFramework.Resource
                     long totalReadyLength = 0L;
                     foreach (ResourceName resourceName in m_ResourceNames)
                     {
-                        ResourceInfo resourceInfo = default(ResourceInfo);
-                        if (m_ResourceInfos.TryGetValue(resourceName, out resourceInfo))
+                        ResourceInfo resourceInfo = null;
+                        if (m_ResourceInfos.TryGetValue(resourceName, out resourceInfo) && resourceInfo.Ready)
                         {
                             totalReadyLength += resourceInfo.Length;
                         }
@@ -157,10 +158,11 @@ namespace GameFramework.Resource
             /// <returns>资源组包含的资源名称列表。</returns>
             public string[] GetResourceNames()
             {
+                int index = 0;
                 string[] resourceNames = new string[m_ResourceNames.Count];
-                for (int i = 0; i < m_ResourceNames.Count; i++)
+                foreach (ResourceName resourceName in m_ResourceNames)
                 {
-                    resourceNames[i] = m_ResourceNames[i].FullName;
+                    resourceNames[index++] = resourceName.FullName;
                 }
 
                 return resourceNames;
@@ -181,6 +183,40 @@ namespace GameFramework.Resource
                 foreach (ResourceName resourceName in m_ResourceNames)
                 {
                     results.Add(resourceName.FullName);
+                }
+            }
+
+            /// <summary>
+            /// 获取资源组包含的资源名称列表。
+            /// </summary>
+            /// <returns>资源组包含的资源名称列表。</returns>
+            public ResourceName[] InternalGetResourceNames()
+            {
+                int index = 0;
+                ResourceName[] resourceNames = new ResourceName[m_ResourceNames.Count];
+                foreach (ResourceName resourceName in m_ResourceNames)
+                {
+                    resourceNames[index++] = resourceName;
+                }
+
+                return resourceNames;
+            }
+
+            /// <summary>
+            /// 获取资源组包含的资源名称列表。
+            /// </summary>
+            /// <param name="results">资源组包含的资源名称列表。</param>
+            public void InternalGetResourceNames(List<ResourceName> results)
+            {
+                if (results == null)
+                {
+                    throw new GameFrameworkException("Results is invalid.");
+                }
+
+                results.Clear();
+                foreach (ResourceName resourceName in m_ResourceNames)
+                {
+                    results.Add(resourceName);
                 }
             }
 

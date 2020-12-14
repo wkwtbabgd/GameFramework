@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System;
@@ -285,6 +285,15 @@ namespace GameFramework.WebRequest
         public void RemoveAllWebRequests()
         {
             m_TaskPool.RemoveAllTasks();
+        }
+
+        /// <summary>
+        /// 获取所有 Web 请求任务的信息。
+        /// </summary>
+        /// <returns>所有 Web 请求任务的信息。</returns>
+        public TaskInfo[] GetAllWebRequestInfos()
+        {
+            return m_TaskPool.GetAllTaskInfos();
         }
 
         private void OnWebRequestAgentStart(WebRequestAgent sender)

@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -67,7 +67,7 @@ namespace GameFramework.Task
                 {
                     LinkedListNode<TaskBase> next = current.Next;
                     m_Tasks.Remove(current);
-                    ReferencePool.Release((IReference)task);
+                    ReferencePool.Release(task);
                     current = next;
                 }
             }
@@ -82,7 +82,7 @@ namespace GameFramework.Task
 
             foreach (TaskBase task in m_Tasks)
             {
-                ReferencePool.Release((IReference)task);
+                ReferencePool.Release(task);
             }
 
             m_Tasks.Clear();
@@ -107,7 +107,7 @@ namespace GameFramework.Task
         public T GenerateTask<T>(int priority) where T : TaskBase, new()
         {
             T task = ReferencePool.Acquire<T>();
-            task.Initialize(m_Serial++, priority);
+            task.Initialize(++m_Serial, priority);
             task.OnGenerate();
 
             LinkedListNode<TaskBase> current = m_Tasks.First;

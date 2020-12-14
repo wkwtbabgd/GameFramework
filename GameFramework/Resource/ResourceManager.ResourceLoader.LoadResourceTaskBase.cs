@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System;
@@ -14,13 +14,10 @@ namespace GameFramework.Resource
     {
         private sealed partial class ResourceLoader
         {
-            private abstract class LoadResourceTaskBase : ITask
+            private abstract class LoadResourceTaskBase : TaskBase
             {
                 private static int s_Serial = 0;
 
-                private int m_SerialId;
-                private int m_Priority;
-                private bool m_Done;
                 private string m_AssetName;
                 private Type m_AssetType;
                 private ResourceInfo m_ResourceInfo;
@@ -33,46 +30,15 @@ namespace GameFramework.Resource
 
                 public LoadResourceTaskBase()
                 {
-                    m_SerialId = 0;
-                    m_Priority = 0;
-                    m_Done = false;
                     m_AssetName = null;
                     m_AssetType = null;
-                    m_ResourceInfo = default(ResourceInfo);
+                    m_ResourceInfo = null;
                     m_DependencyAssetNames = null;
                     m_UserData = null;
                     m_DependencyAssets = new List<object>();
                     m_ResourceObject = null;
                     m_StartTime = default(DateTime);
                     m_TotalDependencyAssetCount = 0;
-                }
-
-                public int SerialId
-                {
-                    get
-                    {
-                        return m_SerialId;
-                    }
-                }
-
-                public int Priority
-                {
-                    get
-                    {
-                        return m_Priority;
-                    }
-                }
-
-                public bool Done
-                {
-                    get
-                    {
-                        return m_Done;
-                    }
-                    set
-                    {
-                        m_Done = value;
-                    }
                 }
 
                 public string AssetName
@@ -152,14 +118,20 @@ namespace GameFramework.Resource
                     }
                 }
 
-                public virtual void Clear()
+                public override string Description
                 {
-                    m_SerialId = 0;
-                    m_Priority = 0;
-                    m_Done = false;
+                    get
+                    {
+                        return m_AssetName;
+                    }
+                }
+
+                public override void Clear()
+                {
+                    base.Clear();
                     m_AssetName = null;
                     m_AssetType = null;
-                    m_ResourceInfo = default(ResourceInfo);
+                    m_ResourceInfo = null;
                     m_DependencyAssetNames = null;
                     m_UserData = null;
                     m_DependencyAssets.Clear();
@@ -173,9 +145,9 @@ namespace GameFramework.Resource
                     return m_DependencyAssetNames;
                 }
 
-                public object[] GetDependencyAssets()
+                public List<object> GetDependencyAssets()
                 {
-                    return m_DependencyAssets.ToArray();
+                    return m_DependencyAssets;
                 }
 
                 public void LoadMain(LoadResourceAgent agent, ResourceObject resourceObject)
@@ -203,8 +175,7 @@ namespace GameFramework.Resource
 
                 protected void Initialize(string assetName, Type assetType, int priority, ResourceInfo resourceInfo, string[] dependencyAssetNames, object userData)
                 {
-                    m_SerialId = s_Serial++;
-                    m_Priority = priority;
+                    Initialize(++s_Serial, priority);
                     m_AssetName = assetName;
                     m_AssetType = assetType;
                     m_ResourceInfo = resourceInfo;

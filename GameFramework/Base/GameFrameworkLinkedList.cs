@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System;
@@ -15,7 +15,7 @@ namespace GameFramework
     /// 游戏框架链表类。
     /// </summary>
     /// <typeparam name="T">指定链表的元素类型。</typeparam>
-    public class GameFrameworkLinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
+    public sealed class GameFrameworkLinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
     {
         private readonly LinkedList<T> m_LinkedList;
         private readonly Queue<LinkedListNode<T>> m_CachedNodes;
@@ -30,7 +30,7 @@ namespace GameFramework
         }
 
         /// <summary>
-        /// 获取链表中实际包含的结点数。
+        /// 获取链表中实际包含的结点数量。
         /// </summary>
         public int Count
         {
@@ -277,15 +277,6 @@ namespace GameFramework
         }
 
         /// <summary>
-        /// 返回循环访问集合的枚举数。
-        /// </summary>
-        /// <returns>循环访问集合的枚举数。</returns>
-        public Enumerator GetEnumerator()
-        {
-            return new Enumerator(m_LinkedList);
-        }
-
-        /// <summary>
         /// 从链表中移除指定值的第一个匹配项。
         /// </summary>
         /// <param name="value">指定值。</param>
@@ -343,6 +334,15 @@ namespace GameFramework
             ReleaseNode(last);
         }
 
+        /// <summary>
+        /// 返回循环访问集合的枚举数。
+        /// </summary>
+        /// <returns>循环访问集合的枚举数。</returns>
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator(m_LinkedList);
+        }
+
         private LinkedListNode<T> AcquireNode(T value)
         {
             LinkedListNode<T> node = null;
@@ -365,11 +365,19 @@ namespace GameFramework
             m_CachedNodes.Enqueue(node);
         }
 
+        /// <summary>
+        /// 返回循环访问集合的枚举数。
+        /// </summary>
+        /// <returns>循环访问集合的枚举数。</returns>
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// 返回循环访问集合的枚举数。
+        /// </summary>
+        /// <returns>循环访问集合的枚举数。</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -384,6 +392,11 @@ namespace GameFramework
 
             internal Enumerator(LinkedList<T> linkedList)
             {
+                if (linkedList == null)
+                {
+                    throw new GameFrameworkException("Linked list is invalid.");
+                }
+
                 m_Enumerator = linkedList.GetEnumerator();
             }
 
@@ -398,6 +411,9 @@ namespace GameFramework
                 }
             }
 
+            /// <summary>
+            /// 获取当前的枚举数。
+            /// </summary>
             object IEnumerator.Current
             {
                 get
@@ -417,12 +433,15 @@ namespace GameFramework
             /// <summary>
             /// 获取下一个结点。
             /// </summary>
-            /// <returns></returns>
+            /// <returns>返回下一个结点。</returns>
             public bool MoveNext()
             {
                 return m_Enumerator.MoveNext();
             }
 
+            /// <summary>
+            /// 重置枚举数。
+            /// </summary>
             void IEnumerator.Reset()
             {
                 ((IEnumerator<T>)m_Enumerator).Reset();

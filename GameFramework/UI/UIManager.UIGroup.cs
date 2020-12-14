@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -396,7 +396,7 @@ namespace GameFramework.UI
                 bool pause = m_Pause;
                 bool cover = false;
                 int depth = UIFormCount;
-                while (current != null)
+                while (current != null && current.Value != null)
                 {
                     LinkedListNode<UIFormInfo> next = current.Next;
                     current.Value.UIForm.OnDepthChanged(Depth, depth--);

@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System;
@@ -102,34 +102,6 @@ namespace GameFramework
                 s_CachedStringBuilder.Length = 0;
                 s_CachedStringBuilder.AppendFormat(format, args);
                 return s_CachedStringBuilder.ToString();
-            }
-
-            /// <summary>
-            /// 根据类型和名称获取完整名称。
-            /// </summary>
-            /// <typeparam name="T">类型。</typeparam>
-            /// <param name="name">名称。</param>
-            /// <returns>完整名称。</returns>
-            public static string GetFullName<T>(string name)
-            {
-                return GetFullName(typeof(T), name);
-            }
-
-            /// <summary>
-            /// 根据类型和名称获取完整名称。
-            /// </summary>
-            /// <param name="type">类型。</param>
-            /// <param name="name">名称。</param>
-            /// <returns>完整名称。</returns>
-            public static string GetFullName(Type type, string name)
-            {
-                if (type == null)
-                {
-                    throw new GameFrameworkException("Type is invalid.");
-                }
-
-                string typeName = type.FullName;
-                return string.IsNullOrEmpty(name) ? typeName : Format("{0}.{1}", typeName, name);
             }
 
             private static void CheckCachedStringBuilder()

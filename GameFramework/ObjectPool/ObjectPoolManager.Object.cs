@@ -1,8 +1,8 @@
 ﻿//------------------------------------------------------------
 // Game Framework
-// Copyright © 2013-2019 Jiang Yin. All rights reserved.
-// Homepage: http://gameframework.cn/
-// Feedback: mailto:jiangyin@gameframework.cn
+// Copyright © 2013-2020 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
 using System;
@@ -178,7 +178,7 @@ namespace GameFramework.ObjectPool
                 m_SpawnCount--;
                 if (m_SpawnCount < 0)
                 {
-                    throw new GameFrameworkException("Spawn count is less than 0.");
+                    throw new GameFrameworkException(Utility.Text.Format("Object '{0}' spawn count is less than 0.", Name));
                 }
             }
 
@@ -189,7 +189,7 @@ namespace GameFramework.ObjectPool
             public void Release(bool isShutdown)
             {
                 m_Object.Release(isShutdown);
-                ReferencePool.Release((IReference)m_Object);
+                ReferencePool.Release(m_Object);
             }
         }
     }
